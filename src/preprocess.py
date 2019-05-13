@@ -58,3 +58,12 @@ def preprocess(data,out_samples_num,fs=1000, lowcut=1, highcut=40, order=4):
     data = butter_bandpass_filter(data, lowcut, highcut, fs, order)
     data=signal.resample(data,out_samples_num)
     data=norm(data)
+
+
+def segments(data):
+    """Split signals into arrays of 4 hb
+    @param: the signal to be chunked
+    @return: list of segments
+    """
+    SPLIT_SIZE = 810
+    return np.array_split(data, SPLIT_SIZES)
