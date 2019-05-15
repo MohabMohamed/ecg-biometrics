@@ -43,6 +43,23 @@ def norm(data):
     max_sample =data.max()
     return (((data-min_sample)/(max_sample-min_sample))-0.5)*2
 
+def _chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    chunks = []
+    for i in range(0, len(l), n):
+        c = l[i:i + n]
+        if len(c) == n: chunks.append(c)
+    return chunks
+
+def segments(data):
+    """Split signals into arrays of 4 hb
+    @param: the signal to be chunked
+    @return: list of segments
+    """
+    SPLIT_SIZE = 810
+    chunks = _chunks(data, SPLIT_SIZE)
+    return chunks
+
 #should tweak order from 1-4 for the best result
 def preprocess(data,out_samples_num,fs=1000, lowcut=1, highcut=40, order=4):
     """ِPreprocess the signal
@@ -58,12 +75,4 @@ def preprocess(data,out_samples_num,fs=1000, lowcut=1, highcut=40, order=4):
     data = butter_bandpass_filter(data, lowcut, highcut, fs, order)
     data=signal.resample(data,out_samples_num)
     data=norm(data)
-
-
-def segments(data):
-    """Split signals into arrays of 4 hb
-    @param: the signal to be chunked
-    @return: list of segments
-    """
-    SPLIT_SIZE = 810
-    return np.array_split(data, SPLIT_SIZES)
+    return segments(data)
