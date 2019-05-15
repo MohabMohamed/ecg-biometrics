@@ -1,12 +1,14 @@
 import numpy as np
 from scipy import signal
 
+
 def remove_mean(data):
     """Remove mean value from numpy array
     @param: numpy array
     @return: numpy array after mean removal
     """
-    return data-data.mean()
+    return data - data.mean()
+
 
 def butter_bandpass(lowcut, highcut, fs, order=4):
     """Genarate butterworth bandpass filter
@@ -19,8 +21,9 @@ def butter_bandpass(lowcut, highcut, fs, order=4):
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq
-    sos = signal.butter(order, [low, high], analog=False, btype='band', output='sos')
+    sos = signal.butter(order, [low, high], analog=False, btype="band", output="sos")
     return sos
+
 
 def butter_bandpass_filter(data, lowcut, highcut, fs, order=4):
     """Apply butterworth bandpass filter
@@ -35,21 +38,25 @@ def butter_bandpass_filter(data, lowcut, highcut, fs, order=4):
     y = signal.sosfilt(sos, data)
     return y
 
+
 def norm(data):
     """Normilaze data between [-1,1]
     @return: Normilized data
     """
-    min_sample =data.min()
-    max_sample =data.max()
-    return (((data-min_sample)/(max_sample-min_sample))-0.5)*2
+    min_sample = data.min()
+    max_sample = data.max()
+    return (((data - min_sample) / (max_sample - min_sample)) - 0.5) * 2
+
 
 def _chunks(l, n):
     """Yield successive n-sized chunks from l."""
     chunks = []
     for i in range(0, len(l), n):
-        c = l[i:i + n]
-        if len(c) == n: chunks.append(c)
+        c = l[i : i + n]
+        if len(c) == n:
+            chunks.append(c)
     return chunks
+
 
 def segments(data):
     """Split signals into arrays of 4 hb
@@ -58,10 +65,11 @@ def segments(data):
     """
     SPLIT_SIZE = 810
     chunks = _chunks(data, SPLIT_SIZE)
-    return chunks
+    return np.array(chunks)
 
-#should tweak order from 1-4 for the best result
-def preprocess(data,out_samples_num,fs=1000, lowcut=1, highcut=40, order=4):
+
+# should tweak order from 1-4 for the best result
+def preprocess(data, out_samples_num, fs=1000, lowcut=1, highcut=40, order=1):
     """ِPreprocess the signal
     @param: the signal to be proccessed
     @param: the number of samples after downsampling the signal
@@ -73,6 +81,6 @@ def preprocess(data,out_samples_num,fs=1000, lowcut=1, highcut=40, order=4):
     """
     data = remove_mean(data)
     data = butter_bandpass_filter(data, lowcut, highcut, fs, order)
-    data=signal.resample(data,out_samples_num)
-    data=norm(data)
+    data = signal.resample(data, out_samples_num)
+    #data = norm(data)
     return segments(data)
