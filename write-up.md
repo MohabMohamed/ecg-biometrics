@@ -89,14 +89,26 @@ The discrete cosine transform (DCT) represents a signal as a sum of sinusoids of
 --
 
 
-## Result
+## Result 
+(respective to portion of train data)
+#### KNN :
 
-| Model        | Accuracy           | Kernel  |
+| Distance metric        | Acc. (100%) | Acc.(80%) |
 | :-------------: |:-------------:| :-----:|
-| SVM      | 0.957 |rbf
-| Knn     | 0.941   |  cosine similarity |
+| euclidean     | 100   |  95.65 |
+| manhattan     | 100   |  95.65 |
+| chebyshev     | 100   |  95.65 |
+
+#### SVM : 
+(with gama = 1/num_of_features)
+| kernel      | Acc. (70%) | Acc. (50%) |
+| :-------------: |:-------------:| :-----:|
+| linear     | 100   |  92.85 |
+| poly     | 100   |  100 (keeps getting 100 until 66% data reduction)|
+| sigmoid     | 100   |  100 (keeps getting 100 until 96% data reduction)|
+| rbf     | 100   |  100 (keeps getting 100 until 96.4% data reduction)|
 
 
 ## Conclusion
 
-God is here!
+The distance metric with KNN doesn't matter as the result is the same, And SVM is way better to solve this problem as rbf(the best kernel to this problem) kernel can get 100% Acc. with only 3.6% of the training data. 

@@ -10,27 +10,28 @@ from sklearn.metrics import accuracy_score
 if __name__ == "__main__":
     target = []
     x = []
-    reduce_ratio = 0.8
+    reduce_ratio = 0.036
+    filter_order=4
     for person_num in range(1, 4):
         print("reading data from file", person_num)
         data = np.fromfile(
             "../Data/biometrics/train/s" + str(person_num) + ".txt", sep="\n"
         )
-        data = preprocess(data, int(data.shape[0] * reduce_ratio))
+        data = preprocess(data, int(data.shape[0] * reduce_ratio),order=filter_order)
         for d in data:
             x.append(extract_features(d))
             target.append(person_num)
 
-    classifier = neighbors.KNeighborsClassifier(n_neighbors=5)
+    #classifier = neighbors.KNeighborsClassifier(n_neighbors=5,metric='minkowski')
 
     # print(x, target)
-
-    # classifier = svm.SVC(C=3.0, tol=0.6, kernel="linear", gamma='auto')
+    #‘rbf’, ‘sigmoid’
+    classifier = svm.SVC(C=1.0,  kernel='rbf', gamma='auto')
     classifier.fit(x, target)
     acc = 0
     for i in range(1, 4):
         test = np.fromfile("../Data/biometrics/test/s{}.txt".format(i), sep="\n")
-        test = preprocess(test, int(test.shape[0] * reduce_ratio))
+        test = preprocess(test, int(test.shape[0] ),order=filter_order)
         test_data = []
         truth = []
         for _c in test:
