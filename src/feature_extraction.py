@@ -2,17 +2,17 @@ import numpy as np
 from scipy import fftpack
 
 
-def autocorr(data):
+def _autocorr(data):
     """Gets the autocorrelation of the signal
     @param: the signal
     @return: autocorrelation result
     """
     result = np.correlate(data, data, mode='full')
-    return result[result.size / 2:]
+    return result[len(result) // 2:]
 
 
-def dct(data):
-    """Gets the adiscrete cosine transform of the signal
+def _dct(data):
+    """Gets the discrete cosine transform of the signal
     @param: the signal
     @return: numpy ndarray of the discrete cosine transform
     """
@@ -24,5 +24,5 @@ def extract_features(data):
     @param: the signal
     @return: numpy ndarray of the features
     """
-    corr_res = autocorr(data)
-    return dct(corr_res)
+    corr_res = _autocorr(data)
+    return _dct(corr_res)
